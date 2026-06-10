@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>ধানের হিসাব</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f4f1ea; display: flex; justify-content: center; padding: 20px; }
+        .container { width: 450px; background: #fff; padding: 25px; border-radius: 10px; border: 1px solid #ccc; }
+        h2 { background: #00008b; color: #fff; text-align: center; padding: 15px; border-radius: 5px; margin-top: 0; }
+        
+        .input-group { display: flex; justify-content: space-between; margin-bottom: 20px; align-items: flex-end; }
+        .input-field { width: 30%; font-size: 13px; font-weight: bold; }
+        input { width: 90%; padding: 8px; border: 1px solid #000; border-radius: 5px; margin-top: 5px; }
+        
+        button { width: 100%; background: #008000; color: #fff; padding: 12px; border: none; cursor: pointer; font-size: 16px; border-radius: 5px; margin-bottom: 20px; }
+        
+        .result-section { display: flex; justify-content: space-between; gap: 10px; }
+        .box { width: 50%; border: 1px solid #000; padding: 15px; border-radius: 5px; font-size: 13px; line-height: 1.8; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>ধানের হিসাব</h2>
+    
+    <div class="input-group">
+        <div class="input-field">জমির পরিমাণ (শতাংশ)<input type="number" id="sotok"></div>
+        <div class="input-field">বিঘা প্রতি ধান (মণ)<input type="number" id="monPerBigha"></div>
+        <div class="input-field">প্রতি মণ দাম<input type="number" id="pricePerMon"></div>
+    </div>
+    
+    <button onclick="calculate()">হিসাব করুন</button>
+
+    <div class="result-section">
+        <div class="box">
+            <strong>সাধারণ প্রকাশ</strong><br>
+            মোট ধান: <span id="s-dhan">0</span><br>
+            মোট ওজন: <span id="s-ojon">0</span><br>
+            মোট টাকা: <span id="s-taka">0</span>
+        </div>
+        <div class="box">
+            <strong>বিশেষ প্রকাশ</strong><br>
+            মোট ধান: <span id="b-dhan">0</span><br>
+            মোট ওজন: <span id="b-ojon">0</span><br>
+            মোট টাকা: <span id="b-taka">0</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    function calculate() {
+        const sotok = parseFloat(document.getElementById('sotok').value) || 0;
+        const monPerBigha = parseFloat(document.getElementById('monPerBigha').value) || 0;
+        const pricePerMon = parseFloat(document.getElementById('pricePerMon').value) || 0;
+
+        // মূল ক্যালকুলেশন
+        const totalMonDecimal = (sotok / 33) * monPerBigha;
+        const totalTaka = totalMonDecimal * pricePerMon;
+
+        // সাধারণ প্রকাশ: মণ ও সের (দশমিক ছাড়া)
+        const mons = Math.floor(totalMonDecimal);
+        const totalSeers = (totalMonDecimal - mons) * 40;
+        
+        document.getElementById('s-dhan').innerText = `${mons} মণ ${totalSeers.toFixed(2)} সের`;
+        document.getElementById('s-ojon').innerText = `${mons} মণ ${totalSeers.toFixed(2)} সের`;
+        document.getElementById('s-taka').innerText = totalTaka.toFixed(2);
+
+        // বিশেষ প্রকাশ: মণ ও ধারা (৫ সের = ১ ধারা)
+        const dhara = totalSeers / 5;
+        
+        document.getElementById('b-dhan').innerText = `${mons} মণ ${dhara.toFixed(2)} ধারা`;
+        document.getElementById('b-ojon').innerText = `${mons} মণ ${dhara.toFixed(2)} ধারা`;
+        document.getElementById('b-taka').innerText = totalTaka.toFixed(2);
+    }
+</script>
+</body>
+</html>
